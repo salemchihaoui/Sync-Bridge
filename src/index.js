@@ -339,24 +339,40 @@ expressApp.get("/load-connections", (req, res) => {
   }
 });
 
-expressApp.post("/save-connection", async (req, res) => {
-  console.log("Request body:", req.body);
-  try {
-    const newConnection = req.body;
-    saveConnection(newConnection);
+function validateConnectionData(data) {
+  const requiredFields = [
+    "CONNECTION_TYPE",
+    "HOST",
+    "PORT",
+    "USER",
+    "PASSWORD",
+    "LOCAL_DIR",
+    "REMOTE_DIR",
+  ];
+  const missingFields = requiredFields.filter((field) => !data[field]);
+  if (missingFields.length > 0) {
+    throw new Error(`Missing required fields: ${missingFields.join(", ")}`);
+  }
+}
 
-    const envData = Object.entries(newConnection)
+expressApp.post("/save-connection", async (req, res) => {
+  try {
+    validateConnectionData(req.body);
+
+    const { name, ...envData } = req.body;
+    saveConnection(req.body);
+
+    const envFileContent = Object.entries(envData)
       .map(([key, value]) => `${key}=${value}`)
       .join("\n");
 
     const envPath = path.join(__dirname, "../.env");
-    await fs.promises.writeFile(envPath, envData, "utf8");
+    await fs.promises.writeFile(envPath, envFileContent, "utf8");
 
-    console.log(".env file updated successfully!");
-    res.status(200).send("Connection and .env updated successfully!");
+    res.status(200).send("Connection saved successfully!");
   } catch (error) {
-    console.error("Error saving connection and updating .env:", error);
-    res.status(500).send("Failed to save connection and update .env.");
+    console.error("Error saving connection:", error);
+    res.status(400).send(`Failed to save connection: ${error.message}`);
   }
 });
 

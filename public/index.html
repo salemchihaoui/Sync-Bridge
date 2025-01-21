@@ -14,6 +14,9 @@
         <option value="">Select a saved connection</option></select
       ><br /><br />
 
+      <label for="name">Name:</label>
+      <input type="text" id="name" name="name" /><br />
+
       <label for="connectionType">Connection Type:</label>
       <select id="connectionType" name="CONNECTION_TYPE">
         <option value="sftp">SFTP</option>
@@ -63,22 +66,20 @@
 
     <script>
       let connections = [];
-      // Load saved connections from the server
+
       async function loadSavedConnections() {
         try {
           const response = await fetch("/load-connections");
-          const connections = await response.json();
+          connections = await response.json();
           const selectElement = document.getElementById("savedConnections");
 
-          // Clear existing options
           selectElement.innerHTML =
             '<option value="">Select a saved connection</option>';
 
-          // Append new options
           connections.forEach((connection, index) => {
             const option = document.createElement("option");
             option.value = index;
-            option.textContent = connection.HOST;
+            option.textContent = connection.name || `Connection ${index + 1}`;
             selectElement.appendChild(option);
           });
         } catch (error) {
@@ -86,38 +87,43 @@
         }
       }
 
-      // Load connections when the page is loaded
-      window.onload = loadSavedConnections;
-
       document
         .getElementById("savedConnections")
         .addEventListener("change", (event) => {
           const selectedIndex = event.target.value;
-          if (selectedIndex !== "") {
+          if (selectedIndex !== "" && connections[selectedIndex]) {
             const selectedConnection = connections[selectedIndex];
+            document.getElementById("name").value =
+              selectedConnection.name || "";
             document.getElementById("connectionType").value =
-              selectedConnection.CONNECTION_TYPE;
-            document.getElementById("host").value = selectedConnection.HOST;
-            document.getElementById("port").value = selectedConnection.PORT;
-            document.getElementById("user").value = selectedConnection.USER;
+              selectedConnection.CONNECTION_TYPE || "";
+            document.getElementById("host").value =
+              selectedConnection.HOST || "";
+            document.getElementById("port").value =
+              selectedConnection.PORT || "";
+            document.getElementById("user").value =
+              selectedConnection.USER || "";
             document.getElementById("password").value =
-              selectedConnection.PASSWORD;
+              selectedConnection.PASSWORD || "";
             document.getElementById("localDir").value =
-              selectedConnection.LOCAL_DIR;
+              selectedConnection.LOCAL_DIR || "";
             document.getElementById("remoteDir").value =
-              selectedConnection.REMOTE_DIR;
+              selectedConnection.REMOTE_DIR || "";
             document.getElementById("useGitignore").checked =
               selectedConnection.USE_GITIGNORE === "true";
             document.getElementById("retryAttempts").value =
-              selectedConnection.RETRY_ATTEMPTS;
+              selectedConnection.RETRY_ATTEMPTS || "";
             document.getElementById("retryDelay").value =
-              selectedConnection.RETRY_DELAY;
+              selectedConnection.RETRY_DELAY || "";
             document.getElementById("connectionTimeout").value =
-              selectedConnection.CONNECTION_TIMEOUT;
+              selectedConnection.CONNECTION_TIMEOUT || "";
+          } else {
+            document.getElementById("envForm").reset();
           }
         });
 
-      // Handle form submit
+      window.onload = loadSavedConnections;
+
       document
         .getElementById("envForm")
         .addEventListener("submit", async (event) => {
@@ -151,6 +157,7 @@
 
             if (response.ok) {
               alert("Configuration updated successfully!");
+              event.target.reset();
               loadSavedConnections(); // Reload saved connections
             } else {
               alert("Failed to update configuration.");
