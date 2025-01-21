@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Env Config Editor</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <h1>Update Configuration</h1>
+    <form id="envForm">
+      <label for="savedConnections">Saved Connections:</label>
+      <select id="savedConnections" class="select">
+        <option value="">Select a saved connection</option></select
+      ><br /><br />
+
+      <label for="connectionType">Connection Type:</label>
+      <input type="text" id="connectionType" name="CONNECTION_TYPE" /><br />
+
+      <label for="host">Host:</label>
+      <input type="text" id="host" name="HOST" /><br />
+
+      <label for="port">Port:</label>
+      <input type="number" id="port" name="PORT" /><br />
+
+      <label for="user">User:</label>
+      <input type="text" id="user" name="USER" /><br />
+
+      <label for="password">Password:</label>
+      <input type="password" id="password" name="PASSWORD" /><br />
+
+      <label for="localDir">Local Directory:</label>
+      <input type="text" id="localDir" name="LOCAL_DIR" /><br />
+
+      <label for="remoteDir">Remote Directory:</label>
+      <input type="text" id="remoteDir" name="REMOTE_DIR" /><br />
+
+      <label for="useGitignore">
+        <input type="checkbox" id="useGitignore" name="USE_GITIGNORE" />
+        Use Gitignore
+      </label>
+      <br />
+
+      <label for="retryAttempts">Retry Attempts:</label>
+      <input type="number" id="retryAttempts" name="RETRY_ATTEMPTS" /><br />
+
+      <label for="retryDelay">Retry Delay (ms):</label>
+      <input type="number" id="retryDelay" name="RETRY_DELAY" /><br />
+
+      <label for="connectionTimeout">Connection Timeout (ms):</label>
+      <input
+        type="number"
+        id="connectionTimeout"
+        name="CONNECTION_TIMEOUT"
+      /><br />
+
+      <button type="submit">Save</button>
+    </form>
+
+    <script>
+      let connections = [];
+      // Load saved connections from the server
+      async function loadSavedConnections() {
+        try {
+          const response = await fetch("/load-connections");
+          const connections = await response.json();
+          const selectElement = document.getElementById("savedConnections");
+
+          // Clear existing options
+          selectElement.innerHTML =
+            '<option value="">Select a saved connection</option>';
+
+          // Append new options
+          connections.forEach((connection, index) => {
+            const option = document.createElement("option");
+            option.value = index;
+            option.textContent = connection.HOST;
+            selectElement.appendChild(option);
+          });
+        } catch (error) {
+          console.error("Error loading connections:", error);
+        }
+      }
+
+      // Load connections when the page is loaded
+      window.onload = loadSavedConnections;
+
+      document
+        .getElementById("savedConnections")
+        .addEventListener("change", (event) => {
+          const selectedIndex = event.target.value;
+          if (selectedIndex !== "") {
+            const selectedConnection = connections[selectedIndex];
+            document.getElementById("connectionType").value =
+              selectedConnection.CONNECTION_TYPE;
+            document.getElementById("host").value = selectedConnection.HOST;
+            document.getElementById("port").value = selectedConnection.PORT;
+            document.getElementById("user").value = selectedConnection.USER;
+            document.getElementById("password").value =
+              selectedConnection.PASSWORD;
+            document.getElementById("localDir").value =
+              selectedConnection.LOCAL_DIR;
+            document.getElementById("remoteDir").value =
+              selectedConnection.REMOTE_DIR;
+            document.getElementById("useGitignore").checked =
+              selectedConnection.USE_GITIGNORE === "true";
+            document.getElementById("retryAttempts").value =
+              selectedConnection.RETRY_ATTEMPTS;
+            document.getElementById("retryDelay").value =
+              selectedConnection.RETRY_DELAY;
+            document.getElementById("connectionTimeout").value =
+              selectedConnection.CONNECTION_TIMEOUT;
+          }
+        });
+
+      // Handle form submit
+      document
+        .getElementById("envForm")
+        .addEventListener("submit", async (event) => {
+          event.preventDefault();
+
+          const formData = new FormData(event.target);
+
+          const config = {};
+          formData.forEach((value, key) => {
+            config[key] =
+              key === "USE_GITIGNORE"
+                ? event.target[key].checked
+                  ? "true"
+                  : "false"
+                : value;
+          });
+
+          // Save new connection
+          try {
+            // Send config to the server for saving
+            const response = await fetch(
+              "http://localhost:4000/save-connection",
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify(config),
+              }
+            );
+
+            if (response.ok) {
+              alert("Configuration updated successfully!");
+              loadSavedConnections(); // Reload saved connections
+            } else {
+              alert("Failed to update configuration.");
+            }
+          } catch (error) {
+            console.error("Error:", error);
+            alert("An error occurred while updating the configuration.");
+          }
+        });
+    </script>
+  </body>
+</html>
