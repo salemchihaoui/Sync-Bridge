@@ -1,3 +1,4 @@
+import express from "express";
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -5,10 +6,11 @@ import chokidar from "chokidar";
 import { Client } from "basic-ftp";
 import { Client as SCPClient } from "node-scp";
 import ignore from "ignore";
-import fs from "fs/promises";
+import fs from "fs";
 import * as path from "path";
 import SFTPClient from "ssh2-sftp-client";
 import notifier from "node-notifier";
+import { fileURLToPath } from "url";
 
 class FileSyncApp {
   constructor() {
@@ -267,9 +269,105 @@ class FileSyncApp {
 
 const app = new FileSyncApp();
 app.start().catch(console.error);
+
+const expressApp = express();
+expressApp.use(express.json());
+expressApp.use(express.static("public"));
+
+const envPath = ".env";
+
+expressApp.post("/update-env", async (req, res) => {
+  try {
+    const config = req.body;
+    const envData = Object.entries(config)
+      .map(([key, value]) => `${key}=${value}`)
+      .join("\n");
+
+    await fs.writeFile(envPath, envData);
+    res.status(200).send("Configuration updated successfully!");
+  } catch (error) {
+    console.error("Error updating .env file:", error);
+    res.status(500).send("Failed to update configuration.");
+  }
+});
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const connectionsFile = path.join(__dirname, "connections.json");
+
+function loadConnections() {
+  try {
+    if (fs.existsSync(connectionsFile)) {
+      const data = fs.readFileSync(connectionsFile, "utf8");
+      return JSON.parse(data);
+    }
+  } catch (error) {
+    console.error("Error loading connections:", error);
+  }
+  return [];
+}
+
+function saveConnection(connection) {
+  try {
+    const existingConnections = fs.existsSync(connectionsFile)
+      ? JSON.parse(fs.readFileSync(connectionsFile, "utf8"))
+      : [];
+
+    existingConnections.push(connection);
+
+    fs.writeFileSync(
+      connectionsFile,
+      JSON.stringify(existingConnections, null, 2),
+      "utf8"
+    );
+
+    console.log("Connection saved successfully!");
+  } catch (error) {
+    console.error("Error saving connection:", error);
+    throw error;
+  }
+}
+
+expressApp.get("/load-connections", (req, res) => {
+  try {
+    const connections = loadConnections();
+    res.status(200).json(connections);
+  } catch (error) {
+    console.error("Error loading connections:", error);
+    res.status(500).send("Failed to load connections.");
+  }
+});
+
+expressApp.post("/save-connection", async (req, res) => {
+  console.log("Request body:", req.body);
+  try {
+    const newConnection = req.body;
+    saveConnection(newConnection);
+
+    const envData = Object.entries(newConnection)
+      .map(([key, value]) => `${key}=${value}`)
+      .join("\n");
+
+    const envPath = path.join(__dirname, ".env");
+    await fs.promises.writeFile(envPath, envData, "utf8");
+
+    console.log(".env file updated successfully!");
+    res.status(200).send("Connection and .env updated successfully!");
+  } catch (error) {
+    console.error("Error saving connection and updating .env:", error);
+    res.status(500).send("Failed to save connection and update .env.");
+  }
+});
+
+const UI_PORT = 4000;
+expressApp.listen(UI_PORT, () => {
+  console.log(`UI Server running at http://localhost:${UI_PORT}`);
+});
+
 process.on("exit", async () => {
   if (app.clients.sftp.sftp) {
-      await app.clients.sftp.end();
-      console.log("SFTP connection closed");
+    await app.clients.sftp.end();
+    console.log("SFTP connection closed");
   }
 });
