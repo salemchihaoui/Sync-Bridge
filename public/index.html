@@ -15,7 +15,11 @@
       ><br /><br />
 
       <label for="connectionType">Connection Type:</label>
-      <input type="text" id="connectionType" name="CONNECTION_TYPE" /><br />
+      <select id="connectionType" name="CONNECTION_TYPE">
+        <option value="sftp">SFTP</option>
+        <option value="scp">SCP</option>
+        <option value="ftp">FTP</option></select
+      ><br />
 
       <label for="host">Host:</label>
       <input type="text" id="host" name="HOST" /><br />
