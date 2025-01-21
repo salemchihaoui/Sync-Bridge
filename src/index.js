@@ -274,7 +274,7 @@ const expressApp = express();
 expressApp.use(express.json());
 expressApp.use(express.static("public"));
 
-const envPath = ".env";
+const envPath = "../.env";
 
 expressApp.post("/update-env", async (req, res) => {
   try {
@@ -294,7 +294,7 @@ expressApp.post("/update-env", async (req, res) => {
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const connectionsFile = path.join(__dirname, "connections.json");
+const connectionsFile = path.join(__dirname, "../connections.json");
 
 function loadConnections() {
   try {
@@ -349,7 +349,7 @@ expressApp.post("/save-connection", async (req, res) => {
       .map(([key, value]) => `${key}=${value}`)
       .join("\n");
 
-    const envPath = path.join(__dirname, ".env");
+    const envPath = path.join(__dirname, "../.env");
     await fs.promises.writeFile(envPath, envData, "utf8");
 
     console.log(".env file updated successfully!");
