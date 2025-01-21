@@ -23,7 +23,20 @@ Sync Bridge is a powerful file synchronization application designed to bridge th
    npm install
    ```
 
-3. Update the `.env` file in the project root
+3. Create `.env` file in the project root
+    ```bash
+   CONNECTION_TYPE=sftp # ftp, sftp or scp
+   HOST=exemple.com
+   PORT=22
+   USER=username
+   PASSWORD=password
+   LOCAL_DIR=C:/exemple/
+   REMOTE_DIR=remote-folder
+   USE_GITIGNORE=true
+   RETRY_ATTEMPTS=3
+   RETRY_DELAY=5000 
+   CONNECTION_TIMEOUT=30000
+   ```
 
 ## Usage
 
