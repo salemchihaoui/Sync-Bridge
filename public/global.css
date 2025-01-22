@@ -1,0 +1,84 @@
+@import url("//fonts.googleapis.com/earlyaccess/jejuhallasan.css");
+@import url("https://fonts.googleapis.com/css2?family=Rubik:wght@300..900&display=swap");
+
+[data-theme="light"] {
+  --white: #fff;
+  --black: #000;
+  --gray: #444;
+  --orange: #ffe6c9;
+  --body-bg: #f9f9f9;
+  --body-color: #333;
+  --right-section-bg: #fff;
+  --h1-color: #631e4d;
+}
+
+[data-theme="dark"] {
+  --white: #000;
+  --black: #fff;
+  --orange: #272727;
+  --gray: #fff;
+  --body-bg: #333;
+  --body-color: #fff;
+  --right-section-bg: #555;
+  --h1-color: #fff;
+}
+
+* {
+  font-family: "Rubik", serif;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: var(--body-bg);
+  color: var(--body-color);
+}
+
+h1 {
+  font-family: "Jeju Hallasan";
+  color: var(--h1-color);
+}
+
+h2 {
+  text-align: center;
+  margin-top: 20px;
+  color: var(--gray);
+}
+
+.container-wrapper {
+  padding: 0 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100svh;
+}
+
+.container {
+  width: 100%;
+  margin: auto;
+  margin-top: 32px;
+  margin-bottom: 32px;
+}
+
+@media screen and (min-width: 768px) and (max-width: 1023px) {
+  .container {
+    max-width: 896px;
+  }
+}
+
+@media screen and (min-width: 1024px) and (max-width: 1439px) {
+  .container-wrapper {
+    padding: 0 64px;
+  }
+  .container {
+    max-width: 1200px;
+  }
+}
+
+@media screen and (min-width: 1440px) {
+  .container {
+    max-width: 1314px;
+  }
+}

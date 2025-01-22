@@ -1,15 +1,24 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Sync Bridge</title>
     <link rel="icon" href="assets/favicon.ico" />
+    <link rel="stylesheet" href="global.css" />
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
+    <button id="darkModeToggle" class="darkModeToggle" aria-label="Toggle color mode" title="Toggle color mode">
+      <div class="sun">
+      </div>
+      <div class="moon">
+        <div class="star"></div>
+        <div class="star small"></div>
+      </div>
+      </button>
     <div class="container-wrapper">
-      <div class="container">
+      <div class="container main-container">
         <div class="left-section">
           <img src="assets/logo.svg" alt="Sync Bridge" />
           <h1>Let's sync some files</h1>
@@ -17,53 +26,53 @@
         <div class="right-section">
           <form id="envForm">
             <h2>Server Configuration</h2>
-            <label for="savedConnections">Saved Connections:</label>
+            <label for="savedConnections">Saved Connections</label>
             <select id="savedConnections" class="select">
               <option value="">Create a new one</option></select
             ><br /><br />
             <input type="hidden" id="uid" name="uid" />
             <div class="row">
               <div class="col">
-                <label for="connectionType">Connection Type:</label>
-                <select id="connectionType" name="CONNECTION_TYPE">
+                <label for="connectionType">Connection Type<span>*</span></label>
+                <select id="connectionType" name="CONNECTION_TYPE" required>
                   <option value="sftp">SFTP</option>
                   <option value="scp">SCP</option>
                   <option value="ftp">FTP</option>
                 </select>
               </div>
               <div class="col">
-                <label for="name">Name:</label>
-                <input type="text" id="name" name="name" />
+                <label for="name">Name</label>
+                <input type="text" id="name" name="name" placeholder="Site Name" />
               </div>
             </div>
             <div class="row">
               <div class="col">
-                <label for="host">Host:</label>
-                <input type="text" id="host" name="HOST" />
+                <label for="host">Host<span>*</span></label>
+                <input type="text" id="host" name="HOST" placeholder="server.com" required />
               </div>
               <div class="col">
-                <label for="port">Port:</label>
-                <input type="number" id="port" name="PORT" />
-              </div>
-            </div>
-            <div class="row">
-              <div class="col">
-                <label for="user">User:</label>
-                <input type="text" id="user" name="USER" />
-              </div>
-              <div class="col">
-                <label for="password">Password:</label>
-                <input type="password" id="password" name="PASSWORD" />
+                <label for="port">Port<span>*</span></label>
+                <input type="number" id="port" name="PORT" placeholder="22" required />
               </div>
             </div>
             <div class="row">
               <div class="col">
-                <label for="localDir">Local Directory Path:</label>
-                <input type="text" id="localDir" name="LOCAL_DIR" />
+                <label for="user">User<span>*</span></label>
+                <input type="text" id="user" name="USER" placeholder="username" required />
               </div>
               <div class="col">
-                <label for="remoteDir">Remote Directory Path (Relative):</label>
-                <input type="text" id="remoteDir" name="REMOTE_DIR" />
+                <label for="password">Password<span>*</span></label>
+                <input type="password" id="password" name="PASSWORD" placeholder="password" required />
+              </div>
+            </div>
+            <div class="row">
+              <div class="col">
+                <label for="localDir">Local Directory Path<span>*</span></label>
+                <input type="text" id="localDir" name="LOCAL_DIR" placeholder="C:\local_directory_path\" required />
+              </div>
+              <div class="col">
+                <label for="remoteDir">Remote Directory Path (Relative)<span>*</span></label>
+                <input type="text" id="remoteDir" name="REMOTE_DIR" placeholder="\remote_directory_path\" required />
               </div>
             </div>
             <label for="useGitignore">
@@ -73,22 +82,19 @@
             <br />
             <div class="row">
               <div class="col-33">
-                <label for="retryAttempts">Retry Attempts:</label>
-                <input type="number" id="retryAttempts" name="RETRY_ATTEMPTS" />
+                <label for="retryAttempts">Retry Attempts</label>
+                <input type="number" id="retryAttempts" name="RETRY_ATTEMPTS" placeholder="3" />
               </div>
               <div class="col-33">
-                <label for="retryDelay">Retry Delay (ms):</label>
-                <input type="number" id="retryDelay" name="RETRY_DELAY" />
+                <label for="retryDelay">Retry Delay (ms)</label>
+                <input type="number" id="retryDelay" name="RETRY_DELAY" placeholder="5000" />
               </div>
               <div class="col-33">
-                <label for="connectionTimeout">Connection Timeout (ms):</label>
-                <input
-                  type="number"
-                  id="connectionTimeout"
-                  name="CONNECTION_TIMEOUT"
-                />
+                <label for="connectionTimeout">Connection Timeout (ms)</label>
+                <input type="number" id="connectionTimeout" name="CONNECTION_TIMEOUT" placeholder="10000" />
               </div>
             </div>
+            <label class="required-msg"><span>*</span> required fields</label>
             <button type="submit">Save and connect</button>
           </form>
         </div>
