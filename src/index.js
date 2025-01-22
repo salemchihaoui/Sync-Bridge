@@ -11,6 +11,7 @@ import * as path from "path";
 import SFTPClient from "ssh2-sftp-client";
 import notifier from "node-notifier";
 import { fileURLToPath } from "url";
+import open from 'open';
 
 class FileSyncApp {
   constructor() {
@@ -387,6 +388,7 @@ expressApp.post("/save-connection", async (req, res) => {
 const UI_PORT = 4000;
 expressApp.listen(UI_PORT, () => {
   console.log(`UI Server running at http://localhost:${UI_PORT}`);
+  open(`http://localhost:${UI_PORT}`, 'sync-bridge');
 });
 
 process.on("exit", async () => {

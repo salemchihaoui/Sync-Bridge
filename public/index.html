@@ -4,184 +4,96 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Sync Bridge</title>
+    <link rel="icon" href="assets/favicon.ico" />
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <h1>Update Configuration</h1>
-    <form id="envForm">
-      <label for="savedConnections">Saved Connections:</label>
-      <select id="savedConnections" class="select">
-        <option value="">Create a new one</option></select
-      ><br /><br />
-      <input type="hidden" id="uid" name="uid" />
-      <label for="name">Name:</label>
-      <input type="text" id="name" name="name" /><br />
-
-      <label for="connectionType">Connection Type:</label>
-      <select id="connectionType" name="CONNECTION_TYPE">
-        <option value="sftp">SFTP</option>
-        <option value="scp">SCP</option>
-        <option value="ftp">FTP</option></select
-      ><br />
-
-      <label for="host">Host:</label>
-      <input type="text" id="host" name="HOST" /><br />
-
-      <label for="port">Port:</label>
-      <input type="number" id="port" name="PORT" /><br />
-
-      <label for="user">User:</label>
-      <input type="text" id="user" name="USER" /><br />
-
-      <label for="password">Password:</label>
-      <input type="password" id="password" name="PASSWORD" /><br />
-
-      <label for="localDir">Local Directory Path:</label>
-      <input type="text" id="localDir" name="LOCAL_DIR" /><br />
-
-      <label for="remoteDir">Remote Directory Path (Relative):</label>
-      <input type="text" id="remoteDir" name="REMOTE_DIR" /><br />
-
-      <label for="useGitignore">
-        <input type="checkbox" id="useGitignore" name="USE_GITIGNORE" />
-        Use Gitignore
-      </label>
-      <br />
-
-      <label for="retryAttempts">Retry Attempts:</label>
-      <input type="number" id="retryAttempts" name="RETRY_ATTEMPTS" /><br />
-
-      <label for="retryDelay">Retry Delay (ms):</label>
-      <input type="number" id="retryDelay" name="RETRY_DELAY" /><br />
-
-      <label for="connectionTimeout">Connection Timeout (ms):</label>
-      <input
-        type="number"
-        id="connectionTimeout"
-        name="CONNECTION_TIMEOUT"
-      /><br />
-
-      <button type="submit">Save and connect</button>
-    </form>
-
-    <script>
-      let connections = [];
-
-      async function loadSavedConnections() {
-        try {
-          const response = await fetch("/load-connections");
-          connections = await response.json();
-          const selectElement = document.getElementById("savedConnections");
-
-          selectElement.innerHTML =
-            '<option value="">Create a new one</option>';
-
-          connections.forEach((connection, index) => {
-            const option = document.createElement("option");
-            option.value = index;
-            option.textContent = connection.name || `Connection ${index + 1}`;
-            selectElement.appendChild(option);
-          });
-
-          document.getElementById("uid").value = generateUniqueId();
-        } catch (error) {
-          console.error("Error loading connections:", error);
-        }
-      }
-
-      document
-        .getElementById("savedConnections")
-        .addEventListener("change", (event) => {
-          const selectedIndex = event.target.value;
-          if (selectedIndex !== "" && connections[selectedIndex]) {
-            const selectedConnection = connections[selectedIndex];
-            document.getElementById("uid").value =
-              selectedConnection.uid || generateUniqueId();
-            document.getElementById("name").value =
-              selectedConnection.name || "";
-            document.getElementById("connectionType").value =
-              selectedConnection.CONNECTION_TYPE || "";
-            document.getElementById("host").value =
-              selectedConnection.HOST || "";
-            document.getElementById("port").value =
-              selectedConnection.PORT || "";
-            document.getElementById("user").value =
-              selectedConnection.USER || "";
-            document.getElementById("password").value =
-              selectedConnection.PASSWORD || "";
-            document.getElementById("localDir").value =
-              selectedConnection.LOCAL_DIR || "";
-            document.getElementById("remoteDir").value =
-              selectedConnection.REMOTE_DIR || "";
-            document.getElementById("useGitignore").checked =
-              selectedConnection.USE_GITIGNORE === "true";
-            document.getElementById("retryAttempts").value =
-              selectedConnection.RETRY_ATTEMPTS || "";
-            document.getElementById("retryDelay").value =
-              selectedConnection.RETRY_DELAY || "";
-            document.getElementById("connectionTimeout").value =
-              selectedConnection.CONNECTION_TIMEOUT || "";
-          } else {
-            document.getElementById("envForm").reset();
-            document.getElementById("uid").value = generateUniqueId();
-          }
-        });
-
-      window.onload = loadSavedConnections;
-
-      function generateUniqueId(length = 5) {
-        const chars =
-          "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-        let id = "";
-        for (let i = 0; i < length; i++) {
-          id += chars.charAt(Math.floor(Math.random() * chars.length));
-        }
-        return id;
-      }
-
-      document
-        .getElementById("envForm")
-        .addEventListener("submit", async (event) => {
-          event.preventDefault();
-
-          const formData = new FormData(event.target);
-
-          const config = {};
-          formData.forEach((value, key) => {
-            config[key] =
-              key === "USE_GITIGNORE"
-                ? event.target[key].checked
-                  ? "true"
-                  : "false"
-                : value;
-          });
-
-          // Save new connection
-          try {
-            // Send config to the server for saving
-            const response = await fetch(
-              "http://localhost:4000/save-connection",
-              {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                body: JSON.stringify(config),
-              }
-            );
-
-            if (response.ok) {
-              alert("Configuration updated successfully!");
-              event.target.reset();
-              loadSavedConnections(); // Reload saved connections
-            } else {
-              alert("Failed to update configuration.");
-            }
-          } catch (error) {
-            console.error("Error:", error);
-            alert("An error occurred while updating the configuration.");
-          }
-        });
-    </script>
+    <div class="container-wrapper">
+      <div class="container">
+        <div class="left-section">
+          <img src="assets/logo.svg" alt="Sync Bridge" />
+          <h1>Let's sync some files</h1>
+        </div>
+        <div class="right-section">
+          <form id="envForm">
+            <h2>Server Configuration</h2>
+            <label for="savedConnections">Saved Connections:</label>
+            <select id="savedConnections" class="select">
+              <option value="">Create a new one</option></select
+            ><br /><br />
+            <input type="hidden" id="uid" name="uid" />
+            <div class="row">
+              <div class="col">
+                <label for="connectionType">Connection Type:</label>
+                <select id="connectionType" name="CONNECTION_TYPE">
+                  <option value="sftp">SFTP</option>
+                  <option value="scp">SCP</option>
+                  <option value="ftp">FTP</option>
+                </select>
+              </div>
+              <div class="col">
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" />
+              </div>
+            </div>
+            <div class="row">
+              <div class="col">
+                <label for="host">Host:</label>
+                <input type="text" id="host" name="HOST" />
+              </div>
+              <div class="col">
+                <label for="port">Port:</label>
+                <input type="number" id="port" name="PORT" />
+              </div>
+            </div>
+            <div class="row">
+              <div class="col">
+                <label for="user">User:</label>
+                <input type="text" id="user" name="USER" />
+              </div>
+              <div class="col">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="PASSWORD" />
+              </div>
+            </div>
+            <div class="row">
+              <div class="col">
+                <label for="localDir">Local Directory Path:</label>
+                <input type="text" id="localDir" name="LOCAL_DIR" />
+              </div>
+              <div class="col">
+                <label for="remoteDir">Remote Directory Path (Relative):</label>
+                <input type="text" id="remoteDir" name="REMOTE_DIR" />
+              </div>
+            </div>
+            <label for="useGitignore">
+              <input type="checkbox" id="useGitignore" name="USE_GITIGNORE" />
+              Use Gitignore
+            </label>
+            <br />
+            <div class="row">
+              <div class="col-33">
+                <label for="retryAttempts">Retry Attempts:</label>
+                <input type="number" id="retryAttempts" name="RETRY_ATTEMPTS" />
+              </div>
+              <div class="col-33">
+                <label for="retryDelay">Retry Delay (ms):</label>
+                <input type="number" id="retryDelay" name="RETRY_DELAY" />
+              </div>
+              <div class="col-33">
+                <label for="connectionTimeout">Connection Timeout (ms):</label>
+                <input
+                  type="number"
+                  id="connectionTimeout"
+                  name="CONNECTION_TIMEOUT"
+                />
+              </div>
+            </div>
+            <button type="submit">Save and connect</button>
+          </form>
+        </div>
+      </div>
+    </div>
+    <script src="script.js"></script>
   </body>
 </html>
