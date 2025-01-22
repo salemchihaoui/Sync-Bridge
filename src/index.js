@@ -267,8 +267,6 @@ class FileSyncApp {
   }
 }
 
-const app = new FileSyncApp();
-app.start().catch(console.error);
 
 const expressApp = express();
 expressApp.use(express.json());
@@ -314,7 +312,15 @@ function saveConnection(connection) {
       ? JSON.parse(fs.readFileSync(connectionsFile, "utf8"))
       : [];
 
-    existingConnections.push(connection);
+    const existingIndex = existingConnections.findIndex(
+      (conn) => conn.uid === connection.uid
+    );
+
+    if (existingIndex !== -1) {
+      existingConnections[existingIndex] = connection;
+    } else {
+      existingConnections.push(connection);
+    }
 
     fs.writeFileSync(
       connectionsFile,
@@ -323,6 +329,8 @@ function saveConnection(connection) {
     );
 
     console.log("Connection saved successfully!");
+    const app = new FileSyncApp();
+    app.start().catch(console.error);
   } catch (error) {
     console.error("Error saving connection:", error);
     throw error;
@@ -359,7 +367,7 @@ expressApp.post("/save-connection", async (req, res) => {
   try {
     validateConnectionData(req.body);
 
-    const { name, ...envData } = req.body;
+    const { uid,name, ...envData } = req.body;
     saveConnection(req.body);
 
     const envFileContent = Object.entries(envData)
