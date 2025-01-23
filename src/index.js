@@ -371,6 +371,16 @@ expressApp.post("/save-connection", async (req, res) => {
     const envPath = path.join(__dirname, "../.env");
     await fs.promises.writeFile(envPath, envFileContent, "utf8");
 
+    dotenv.config();
+
+    // Update application-specific properties with new environment variables
+    app.localDir = process.env.LOCAL_DIR || app.localDir;
+    app.remoteDir = process.env.REMOTE_DIR || app.remoteDir;
+    app.connectionType = process.env.CONNECTION_TYPE || app.connectionType;
+    app.retryAttempts = parseInt(process.env.RETRY_ATTEMPTS) || app.retryAttempts;
+    app.retryDelay = parseInt(process.env.RETRY_DELAY) || app.retryDelay;
+    app.connectionTimeout = parseInt(process.env.CONNECTION_TIMEOUT) || app.connectionTimeout;
+    
     res.status(200).send("Connection saved successfully!");
   } catch (error) {
     console.error("Error saving connection:", error);

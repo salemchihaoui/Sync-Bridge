@@ -23,7 +23,7 @@ const ws = new WebSocket("ws://localhost:8080");
 
 ws.onmessage = (event) => {
   const data = JSON.parse(event.data);
-  toastr.info(data.message, data.title);
+  // toastr.info(data.message, data.title);
   document.querySelector(".main-container").classList.add("active");
   addNotification(data.title, data.message);
 };
@@ -39,9 +39,12 @@ function addNotification(title, message) {
       <p>${message}</p>
     `;
 
-  container.appendChild(card);
+  container.insertBefore(card, container.firstChild);
 
-  container.scrollTop = container.scrollHeight;
+  container.scrollTo({
+    top: 0,
+    behavior: 'smooth'
+  });
 }
 
 async function loadSavedConnections() {

@@ -1,5 +1,6 @@
 .main-container {
   display: flex;
+  position: relative;
   justify-content: center;
   align-items: stretch;
   overflow: hidden;
@@ -268,23 +269,39 @@ img {
 }
 
 .notification-panel {
-  margin: 20px;
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  background: #f9f9f9;
-  height: 500px;
-  width: 500px;
-  overflow-y: auto;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 50%;
+  padding: 20px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s ease-in-out;
+}
+
+.notification-panel h2 {
+  color: white;
 }
 
 .notification-container {
   display: flex;
   flex-direction: column;
   gap: 10px;
+  overflow-y: scroll;
+  max-height: calc(100% - 70px);
+  padding-right: 8px;
+  margin-right: -11px;
 }
 
+.notification-container::-webkit-scrollbar {
+  width: 3px;
+}
+
+.notification-container::-webkit-scrollbar-thumb {
+  background-color: #631e4d;
+  border-radius: 5px;
+}
 .notification-card {
   padding: 10px;
   border: 1px solid #ccc;
@@ -308,10 +325,17 @@ img {
 .main-container.active .right-section {
   transform: translateX(-100%);
 }
+
 .main-container.active .left-section {
   transform: translateX(100%);
   position: relative;
 }
+
+.main-container.active .notification-panel {
+  opacity: 1;
+  pointer-events: all;
+}
+
 .main-container.active .left-section::after {
   content: "";
   position: absolute;
