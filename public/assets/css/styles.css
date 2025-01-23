@@ -86,6 +86,8 @@ select {
   border-radius: 4px;
   border: 1px solid #ddd;
   box-sizing: border-box;
+  background: var(--right-section-bg);
+  color: var(--black);
 }
 
 input:not([type="checkbox"]) {
@@ -95,6 +97,8 @@ input:not([type="checkbox"]) {
   margin-bottom: 20px;
   border: 1px solid #ddd;
   border-radius: 4px;
+  background: var(--right-section-bg);
+  color: var(--black);
 }
 
 input:not([type="checkbox"]):active,
@@ -306,24 +310,32 @@ img {
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 6px;
-  background: white;
+  background: var(--right-section-bg);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .notification-card h4 {
   margin: 0 0 5px;
   font-size: 14px;
-  color: #333;
+  color: var(--body-color);
 }
 
 .notification-card p {
   margin: 0;
   font-size: 12px;
-  color: #666;
+  color: var(--gray);
 }
 
 .main-container.active .right-section {
   transform: translateX(-100%);
+}
+
+.main-container .left-section * {
+  transition: opacity 0.3s ease-in-out;
+}
+
+.main-container.active .left-section * {
+  opacity: 0;
 }
 
 .main-container.active .left-section {
