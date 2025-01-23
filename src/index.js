@@ -34,12 +34,14 @@ class FileSyncApp {
   }
 
   sendNotification(title, message) {
-    notifier.notify({
-      title,
-      message,
-      sound: true,
-      timeout: 1,
-    });
+    if (process.env.USE_NODENOTIFIER === "true") {
+      notifier.notify({
+        title,
+        message,
+        sound: true,
+        timeout: 1,
+      });
+    }
     // Send notification to all WebSocket clients
     const payload = JSON.stringify({ title, message });
     this.wsclients.forEach((client) => {

@@ -25,6 +25,7 @@ const ws = new WebSocket("ws://localhost:8080");
 ws.onmessage = (event) => {
   const data = JSON.parse(event.data);
   toastr.info(data.message,data.title);
+  document.querySelector(".main-container").classList.add("active");
 };
 
 async function loadSavedConnections() {
@@ -70,6 +71,8 @@ document
         selectedConnection.REMOTE_DIR || "";
       document.getElementById("useGitignore").checked =
         selectedConnection.USE_GITIGNORE === "true";
+        document.getElementById("useNodeNotifier").checked =
+        selectedConnection.USE_NODENOTIFIER === "true";
       document.getElementById("retryAttempts").value =
         selectedConnection.RETRY_ATTEMPTS || "";
       document.getElementById("retryDelay").value =

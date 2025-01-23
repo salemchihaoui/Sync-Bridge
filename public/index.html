@@ -69,17 +69,27 @@
             <div class="row">
               <div class="col">
                 <label for="localDir">Local Directory Path<span>*</span></label>
-                <input type="text" id="localDir" name="LOCAL_DIR" placeholder="C:\local_directory_path\" required />
+                <input type="text" id="localDir" name="LOCAL_DIR" placeholder="C:\local_directory_path" required />
               </div>
               <div class="col">
                 <label for="remoteDir">Remote Directory Path (Relative)<span>*</span></label>
-                <input type="text" id="remoteDir" name="REMOTE_DIR" placeholder="\remote_directory_path\" required />
+                <input type="text" id="remoteDir" name="REMOTE_DIR" placeholder="remote_directory_path" required />
               </div>
             </div>
-            <label for="useGitignore">
-              <input type="checkbox" id="useGitignore" name="USE_GITIGNORE" />
-              Use Gitignore
-            </label>
+            <div class="row">
+              <div class="col">
+                <label for="useGitignore">
+                  <input type="checkbox" id="useGitignore" name="USE_GITIGNORE" />
+                  Use Gitignore
+                </label>
+              </div>
+              <div class="col">
+                <label for="useNodeNotifier">
+                  <input type="checkbox" id="useNodeNotifier" name="USE_NODENOTIFIER" checked />
+                  Use Node-Notifier
+                </label>
+              </div>
+            </div>
             <br />
             <div class="row">
               <div class="col-33">

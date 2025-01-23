@@ -58,8 +58,8 @@ h2 {
 .container {
   width: 100%;
   margin: auto;
-  margin-top: 32px;
-  margin-bottom: 32px;
+  margin-top: 8px;
+  margin-bottom: 8px;
 }
 
 @media screen and (min-width: 768px) and (max-width: 1023px) {
