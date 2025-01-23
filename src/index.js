@@ -34,7 +34,7 @@ class FileSyncApp {
   }
 
   sendNotification(title, message) {
-    if (process.env.USE_NODENOTIFIER === "true") {
+    if (process.env.USE_NODENOTIFIER === "on") {
       notifier.notify({
         title,
         message,

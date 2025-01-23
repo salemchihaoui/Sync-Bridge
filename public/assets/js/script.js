@@ -72,7 +72,7 @@ document
       document.getElementById("useGitignore").checked =
         selectedConnection.USE_GITIGNORE === "true";
         document.getElementById("useNodeNotifier").checked =
-        selectedConnection.USE_NODENOTIFIER === "true";
+        selectedConnection.USE_NODENOTIFIER === "on";
       document.getElementById("retryAttempts").value =
         selectedConnection.RETRY_ATTEMPTS || "";
       document.getElementById("retryDelay").value =
