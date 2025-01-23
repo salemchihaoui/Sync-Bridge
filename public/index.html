@@ -7,17 +7,24 @@
     <link rel="icon" href="assets/images/favicon.ico" />
     <link rel="stylesheet" href="assets/css/global.css" />
     <link rel="stylesheet" href="assets/css/styles.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css"
+    />
   </head>
   <body>
-    <button id="darkModeToggle" class="darkModeToggle" aria-label="Toggle color mode" title="Toggle color mode">
-      <div class="sun">
-      </div>
+    <button
+      id="darkModeToggle"
+      class="darkModeToggle"
+      aria-label="Toggle color mode"
+      title="Toggle color mode"
+    >
+      <div class="sun"></div>
       <div class="moon">
         <div class="star"></div>
         <div class="star small"></div>
       </div>
-      </button>
+    </button>
     <div class="container-wrapper">
       <div class="container main-container">
         <div class="left-section">
@@ -34,7 +41,9 @@
             <input type="hidden" id="uid" name="uid" />
             <div class="row">
               <div class="col">
-                <label for="connectionType">Connection Type<span>*</span></label>
+                <label for="connectionType"
+                  >Connection Type<span>*</span></label
+                >
                 <select id="connectionType" name="CONNECTION_TYPE" required>
                   <option value="sftp">SFTP</option>
                   <option value="scp">SCP</option>
@@ -43,49 +52,101 @@
               </div>
               <div class="col">
                 <label for="name">Name</label>
-                <input type="text" id="name" name="name" placeholder="Site Name" />
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  placeholder="Site Name"
+                />
               </div>
             </div>
             <div class="row">
               <div class="col">
                 <label for="host">Host<span>*</span></label>
-                <input type="text" id="host" name="HOST" placeholder="server.com" required />
+                <input
+                  type="text"
+                  id="host"
+                  name="HOST"
+                  placeholder="server.com"
+                  required
+                />
               </div>
               <div class="col">
                 <label for="port">Port<span>*</span></label>
-                <input type="number" id="port" name="PORT" placeholder="22" required />
+                <input
+                  type="number"
+                  id="port"
+                  name="PORT"
+                  placeholder="22"
+                  required
+                />
               </div>
             </div>
             <div class="row">
               <div class="col">
                 <label for="user">User<span>*</span></label>
-                <input type="text" id="user" name="USER" placeholder="username" required />
+                <input
+                  type="text"
+                  id="user"
+                  name="USER"
+                  placeholder="username"
+                  required
+                />
               </div>
               <div class="col">
                 <label for="password">Password<span>*</span></label>
-                <input type="password" id="password" name="PASSWORD" placeholder="password" required />
+                <input
+                  type="password"
+                  id="password"
+                  name="PASSWORD"
+                  placeholder="password"
+                  required
+                />
               </div>
             </div>
             <div class="row">
               <div class="col">
                 <label for="localDir">Local Directory Path<span>*</span></label>
-                <input type="text" id="localDir" name="LOCAL_DIR" placeholder="C:\local_directory_path" required />
+                <input
+                  type="text"
+                  id="localDir"
+                  name="LOCAL_DIR"
+                  placeholder="C:\local_directory_path"
+                  required
+                />
               </div>
               <div class="col">
-                <label for="remoteDir">Remote Directory Path (Relative)<span>*</span></label>
-                <input type="text" id="remoteDir" name="REMOTE_DIR" placeholder="remote_directory_path" required />
+                <label for="remoteDir"
+                  >Remote Directory Path (Relative)<span>*</span></label
+                >
+                <input
+                  type="text"
+                  id="remoteDir"
+                  name="REMOTE_DIR"
+                  placeholder="remote_directory_path"
+                  required
+                />
               </div>
             </div>
             <div class="row">
               <div class="col">
                 <label for="useGitignore">
-                  <input type="checkbox" id="useGitignore" name="USE_GITIGNORE" />
+                  <input
+                    type="checkbox"
+                    id="useGitignore"
+                    name="USE_GITIGNORE"
+                  />
                   Use Gitignore
                 </label>
               </div>
               <div class="col">
                 <label for="useNodeNotifier">
-                  <input type="checkbox" id="useNodeNotifier" name="USE_NODENOTIFIER" checked />
+                  <input
+                    type="checkbox"
+                    id="useNodeNotifier"
+                    name="USE_NODENOTIFIER"
+                    checked
+                  />
                   Use Node-Notifier
                 </label>
               </div>
@@ -94,20 +155,41 @@
             <div class="row">
               <div class="col-33">
                 <label for="retryAttempts">Retry Attempts</label>
-                <input type="number" id="retryAttempts" name="RETRY_ATTEMPTS" placeholder="3" />
+                <input
+                  type="number"
+                  id="retryAttempts"
+                  name="RETRY_ATTEMPTS"
+                  placeholder="3"
+                />
               </div>
               <div class="col-33">
                 <label for="retryDelay">Retry Delay (ms)</label>
-                <input type="number" id="retryDelay" name="RETRY_DELAY" placeholder="5000" />
+                <input
+                  type="number"
+                  id="retryDelay"
+                  name="RETRY_DELAY"
+                  placeholder="5000"
+                />
               </div>
               <div class="col-33">
                 <label for="connectionTimeout">Connection Timeout (ms)</label>
-                <input type="number" id="connectionTimeout" name="CONNECTION_TIMEOUT" placeholder="10000" />
+                <input
+                  type="number"
+                  id="connectionTimeout"
+                  name="CONNECTION_TIMEOUT"
+                  placeholder="10000"
+                />
               </div>
             </div>
             <label class="required-msg"><span>*</span> required fields</label>
             <button type="submit">Save and connect</button>
           </form>
+        </div>
+      </div>
+      <div id="notificationPanel" class="notification-panel">
+        <h2>Live Logs</h2>
+        <div id="notificationContainer" class="notification-container">
+          im a log
         </div>
       </div>
     </div>

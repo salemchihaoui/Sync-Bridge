@@ -267,6 +267,44 @@ img {
   transform: scale(0.45) rotate(35deg);
 }
 
+.notification-panel {
+  margin: 20px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: #f9f9f9;
+  height: 500px;
+  width: 500px;
+  overflow-y: auto;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.notification-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.notification-card {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background: white;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.notification-card h4 {
+  margin: 0 0 5px;
+  font-size: 14px;
+  color: #333;
+}
+
+.notification-card p {
+  margin: 0;
+  font-size: 12px;
+  color: #666;
+}
+
 .main-container.active .right-section {
   transform: translateX(-100%);
 }

@@ -7,7 +7,6 @@ let currentThemeSetting = localStorage.getItem("theme") || "light";
 document.querySelector("html").setAttribute("data-theme", currentThemeSetting);
 (currentThemeSetting === "dark" ? sun : moon).classList.add("visible");
 
-
 document.getElementById("darkModeToggle").addEventListener("click", () => {
   const newTheme = currentThemeSetting === "dark" ? "light" : "dark";
 
@@ -24,9 +23,26 @@ const ws = new WebSocket("ws://localhost:8080");
 
 ws.onmessage = (event) => {
   const data = JSON.parse(event.data);
-  toastr.info(data.message,data.title);
+  toastr.info(data.message, data.title);
   document.querySelector(".main-container").classList.add("active");
+  addNotification(data.title, data.message);
 };
+
+function addNotification(title, message) {
+  const container = document.getElementById("notificationContainer");
+
+  const card = document.createElement("div");
+  card.className = "notification-card";
+
+  card.innerHTML = `
+      <h4>${title}</h4>
+      <p>${message}</p>
+    `;
+
+  container.appendChild(card);
+
+  container.scrollTop = container.scrollHeight;
+}
 
 async function loadSavedConnections() {
   try {
@@ -71,7 +87,7 @@ document
         selectedConnection.REMOTE_DIR || "";
       document.getElementById("useGitignore").checked =
         selectedConnection.USE_GITIGNORE === "true";
-        document.getElementById("useNodeNotifier").checked =
+      document.getElementById("useNodeNotifier").checked =
         selectedConnection.USE_NODENOTIFIER === "on";
       document.getElementById("retryAttempts").value =
         selectedConnection.RETRY_ATTEMPTS || "";
@@ -124,14 +140,17 @@ document.getElementById("envForm").addEventListener("submit", async (event) => {
     });
 
     if (response.ok) {
-      toastr.success("Configuration updated successfully!","Nice!");
+      toastr.success("Configuration updated successfully!", "Nice!");
       event.target.reset();
       loadSavedConnections(); // Reload saved connections
     } else {
-      toastr.error("Failed to update configuration.","Error!");
+      toastr.error("Failed to update configuration.", "Error!");
     }
   } catch (error) {
     console.error("Error:", error);
-    toastr.error("An error occurred while updating the configuration.","Error!");
+    toastr.error(
+      "An error occurred while updating the configuration.",
+      "Error!"
+    );
   }
 });
