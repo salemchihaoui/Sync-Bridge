@@ -15,6 +15,7 @@
     "node-notifier": "^10.0.1",
     "node-scp": "^0.0.22",
     "open": "^10.1.0",
-    "ssh2-sftp-client": "^11.0.0"
+    "ssh2-sftp-client": "^11.0.0",
+    "ws": "^8.18.0"
   }
 }

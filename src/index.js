@@ -1,3 +1,4 @@
+import { WebSocketServer } from "ws";
 import express from "express";
 import dotenv from "dotenv";
 dotenv.config();
@@ -29,6 +30,7 @@ class FileSyncApp {
       sftp: new SFTPClient(),
       scp: null,
     };
+    this.wsclients = new Set();
   }
 
   sendNotification(title, message) {
@@ -37,6 +39,13 @@ class FileSyncApp {
       message,
       sound: true,
       timeout: 1,
+    });
+    // Send notification to all WebSocket clients
+    const payload = JSON.stringify({ title, message });
+    this.wsclients.forEach((client) => {
+      if (client.readyState === client.OPEN) {
+        client.send(payload);
+      }
     });
   }
 
@@ -273,23 +282,6 @@ const expressApp = express();
 expressApp.use(express.json());
 expressApp.use(express.static("public"));
 
-const envPath = "../.env";
-
-expressApp.post("/update-env", async (req, res) => {
-  try {
-    const config = req.body;
-    const envData = Object.entries(config)
-      .map(([key, value]) => `${key}=${value}`)
-      .join("\n");
-
-    await fs.writeFile(envPath, envData);
-    res.status(200).send("Configuration updated successfully!");
-  } catch (error) {
-    console.error("Error updating .env file:", error);
-    res.status(500).send("Failed to update configuration.");
-  }
-});
-
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -330,7 +322,6 @@ function saveConnection(connection) {
     );
 
     console.log("Connection saved successfully!");
-    const app = new FileSyncApp();
     app.start().catch(console.error);
   } catch (error) {
     console.error("Error saving connection:", error);
@@ -389,6 +380,17 @@ const UI_PORT = 4000;
 expressApp.listen(UI_PORT, () => {
   console.log(`UI Server running at http://localhost:${UI_PORT}`);
   open(`http://localhost:${UI_PORT}`, 'sync-bridge');
+});
+
+const app = new FileSyncApp();
+// Set up WebSocket Server
+const wss = new WebSocketServer({ port: 8080 });
+wss.on("connection", (ws) => {
+  app.wsclients.add(ws);
+
+  ws.on("close", () => {
+    app.wsclients.delete(ws);
+  });
 });
 
 process.on("exit", async () => {

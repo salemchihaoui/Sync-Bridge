@@ -82,3 +82,7 @@ h2 {
     max-width: 1314px;
   }
 }
+
+#toast-container > .toast {
+  width: 500px !important;
+}

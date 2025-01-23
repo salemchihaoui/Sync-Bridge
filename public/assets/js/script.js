@@ -5,11 +5,7 @@ const moon = document.querySelector(".moon");
 // Load the saved theme from local storage
 let currentThemeSetting = localStorage.getItem("theme") || "light";
 document.querySelector("html").setAttribute("data-theme", currentThemeSetting);
-if (currentThemeSetting === "dark") {
-  sun.classList.add("visible");
-} else {
-  moon.classList.add("visible");
-}
+(currentThemeSetting === "dark" ? sun : moon).classList.add("visible");
 
 
 document.getElementById("darkModeToggle").addEventListener("click", () => {
@@ -23,6 +19,13 @@ document.getElementById("darkModeToggle").addEventListener("click", () => {
   sun.classList.toggle("visible");
   moon.classList.toggle("visible");
 });
+
+const ws = new WebSocket("ws://localhost:8080");
+
+ws.onmessage = (event) => {
+  const data = JSON.parse(event.data);
+  toastr.info(data.message,data.title);
+};
 
 async function loadSavedConnections() {
   try {
@@ -118,14 +121,14 @@ document.getElementById("envForm").addEventListener("submit", async (event) => {
     });
 
     if (response.ok) {
-      alert("Configuration updated successfully!");
+      toastr.success("Configuration updated successfully!","Nice!");
       event.target.reset();
       loadSavedConnections(); // Reload saved connections
     } else {
-      alert("Failed to update configuration.");
+      toastr.error("Failed to update configuration.","Error!");
     }
   } catch (error) {
     console.error("Error:", error);
-    alert("An error occurred while updating the configuration.");
+    toastr.error("An error occurred while updating the configuration.","Error!");
   }
 });
